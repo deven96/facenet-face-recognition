@@ -52,9 +52,9 @@ def prepare_database():
     database = {}
 
     # load all the images of individuals to recognize into the database
-    for file in glob.glob("images/*"):
-        identity = os.path.splitext(os.path.basename(file))[0]
-        database[identity] = img_path_to_encoding(file, FRmodel)
+    for _file in glob.glob("images/*"):
+        identity = os.path.splitext(os.path.basename(_file))[0]
+        database[identity] = img_path_to_encoding(_file, FRmodel)
 
     return database
 
