@@ -12,7 +12,7 @@ from keras.layers.normalization import BatchNormalization
 from keras.layers.pooling import MaxPooling2D, AveragePooling2D
 import h5py
 import matplotlib.pyplot as plt
-from .. import settings
+import settings
 
 
 
@@ -142,7 +142,7 @@ def load_weights_from_FaceNet(FRmodel):
 
 def load_weights():
     # Set weights path
-    dirPath = './weights'
+    dirPath = settings.WEIGHTS_DIR
     fileNames = filter(lambda f: not f.startswith('.'), os.listdir(dirPath))
     paths = {}
     weights_dict = {}
@@ -210,7 +210,7 @@ def img_to_encoding(image, model):
     image: image 
     model: keras or tensorflow model to be used to get embeddings
     """
-    image = cv2.resize(image, settings.IMAGE_SIZE) 
+    image = cv2.resize(image, settings.IMAGE_SIZE)
     img = image[...,::-1]
     img = np.around(np.transpose(img, (2,0,1))/255.0, decimals=12)
     x_train = np.array([img])

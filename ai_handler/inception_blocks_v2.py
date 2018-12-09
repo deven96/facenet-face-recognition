@@ -9,7 +9,7 @@ from keras.layers import Conv2D, ZeroPadding2D, Activation, Input, concatenate
 from keras.models import Model
 from keras.layers.normalization import BatchNormalization
 from keras.layers.pooling import MaxPooling2D, AveragePooling2D
-import fr_utils
+from . import fr_utils
 from keras.layers.core import Lambda, Flatten, Dense
 
 def inception_block_1a(X):

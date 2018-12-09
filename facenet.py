@@ -8,10 +8,10 @@ import glob
 import numpy as np
 from numpy import genfromtxt
 import tensorflow as tf
+import settings
 from ai_handler.fr_utils import *
 from ai_handler.inception_blocks_v2 import *
 import pyttsx3
-import settings
 
 
 
@@ -146,9 +146,9 @@ def find_identity(frame, x1, y1, x2, y2):
     Determine whether the face contained within the bounding box exists in our database
 
     x1,y1_____________
-    |                 |
-    |                 |
-    |_________________x2,y2
+       |              |
+       |              |
+       |______________x2,y2
 
     """
     height, width, channels = frame.shape
