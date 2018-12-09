@@ -8,15 +8,17 @@ import glob
 import numpy as np
 from numpy import genfromtxt
 import tensorflow as tf
-from fr_utils import *
-from inception_blocks_v2 import *
+from ai_handler.fr_utils import *
+from ai_handler.inception_blocks_v2 import *
 import pyttsx3
+import settings
 
 
-PADDING = 50
+
+PADDING = settings.PADDING
 ready_to_detect_identity = True
 
-FRmodel = faceRecoModel(input_shape=(3, 96, 96))
+FRmodel = faceRecoModel(input_shape=settings.MODEL_INPUT_SHAPE)
 
 
 def say_statement(text):
@@ -62,10 +64,15 @@ FRmodel.compile(optimizer = 'adam', loss = triplet_loss, metrics = ['accuracy'])
 load_weights_from_FaceNet(FRmodel)
 
 def prepare_database():
+    """
+    prepares the image database by getting encoding and name of every image
+    in the database and parsing it as a dictionary. This is to be replaced 
+    with proper database functionality (pre-saved encodings)
+    """
     database = {}
 
     # load all the images of individuals to recognize into the database
-    for _file in glob.glob("images/*"):
+    for _file in glob.glob(settings.GLOB_IMAGE_DATABASE):
         identity = os.path.splitext(os.path.basename(_file))[0]
         database[identity] = img_path_to_encoding(_file, FRmodel)
 
@@ -81,10 +88,10 @@ def webcam_face_recognizer(database):
     """
     global ready_to_detect_identity
 
-    cv2.namedWindow("preview")
+    cv2.namedWindow(settings.WINDOW_NAME)
     vc = cv2.VideoCapture(0)
 
-    face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
+    face_cascade = cv2.CascadeClassifier(settings.CV2_XML)
     
     while vc.isOpened():
         _, frame = vc.read()
@@ -95,11 +102,11 @@ def webcam_face_recognizer(database):
             img = process_frame(img, frame, face_cascade)   
         
         key = cv2.waitKey(100)
-        cv2.imshow("preview", img)
+        cv2.imshow(settings.WINDOW_NAME, img)
 
         if key == 27: # exit on ESC
             break
-    cv2.destroyWindow("preview")
+    cv2.destroyWindow(settings.WINDOW_NAME)
 
 def process_frame(img, frame, face_cascade):
     """
@@ -125,7 +132,8 @@ def process_frame(img, frame, face_cascade):
             identities.append(identity)
 
     if identities != []:
-        cv2.imwrite('example.png',img)
+        example = os.path.join(settings.IMAGE_EXAMPLE_DIR, "example.png")
+        cv2.imwrite(example, img)
 
         ready_to_detect_identity = False
         pool = Pool(processes=1) 
@@ -180,7 +188,7 @@ def who_is_it(image, database, model):
             min_dist = dist
             identity = name
     
-    if min_dist > 0.52:
+    if min_dist > settings.MIN_DISTANCE:
         return None
     else:
         return str(identity)

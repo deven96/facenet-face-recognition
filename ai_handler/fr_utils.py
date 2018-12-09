@@ -12,11 +12,11 @@ from keras.layers.normalization import BatchNormalization
 from keras.layers.pooling import MaxPooling2D, AveragePooling2D
 import h5py
 import matplotlib.pyplot as plt
+from .. import settings
 
 
-_FLOATX = 'float32'
 
-def variable(value, dtype=_FLOATX, name=None):
+def variable(value, dtype=settings._FLOATX, name=None):
     v = tf.Variable(np.asarray(value, dtype=dtype), name=name)
     _get_session().run(v.initializer)
     return v
@@ -27,7 +27,7 @@ def shape(x):
 def square(x):
     return tf.square(x)
 
-def zeros(shape, dtype=_FLOATX, name=None):
+def zeros(shape, dtype=settings._FLOATX, name=None):
     return variable(np.zeros(shape), dtype, name)
 
 def concatenate(tensors, axis=-1):
@@ -210,7 +210,7 @@ def img_to_encoding(image, model):
     image: image 
     model: keras or tensorflow model to be used to get embeddings
     """
-    image = cv2.resize(image, (96, 96)) 
+    image = cv2.resize(image, settings.IMAGE_SIZE) 
     img = image[...,::-1]
     img = np.around(np.transpose(img, (2,0,1))/255.0, decimals=12)
     x_train = np.array([img])

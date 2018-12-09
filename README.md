@@ -14,4 +14,6 @@ In the root directory. After the modules have been installed you can run the pro
 
 ## NOTE
 
-We are using the Windows 10 Text-to-Speech library to output our audio message, so if you want to run it on a different OS then you will have to replace the speech library used in facenet.py
+This is to be used as a smaller part of a facial recognition desktop software
+
+We are using the pyttsx3 library to output our audio message, so if you want to run it using a different TTS engine then you will have to replace the speech library used in facenet.py
