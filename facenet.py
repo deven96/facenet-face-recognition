@@ -20,6 +20,9 @@ ready_to_detect_identity = True
 
 FRmodel = faceRecoModel(input_shape=settings.MODEL_INPUT_SHAPE)
 
+speech_engine = pyttsx3.init()
+speech_engine.setProperty('voice', 'english')  # changes the voice
+
 
 def say_statement(text):
     """pronouces text passed as argument using pyttsx3 engine
@@ -27,10 +30,10 @@ def say_statement(text):
     Arguments:
     text -- python string to be pronounced by TTS module
     """
-    engine = pyttsx3.init()
-    engine.setProperty('voice', 'english')  # changes the voice
-    engine.say(text)
-    engine.runAndWait()
+    global speech_engine
+    print(text)
+    speech_engine.say(text)
+    speech_engine.runAndWait()
 
 
 def triplet_loss(y_true, y_pred, alpha = 0.3):
@@ -132,13 +135,14 @@ def process_frame(img, frame, face_cascade):
             identities.append(identity)
 
     if identities != []:
-        example = os.path.join(settings.IMAGE_EXAMPLE_DIR, "example.png")
-        cv2.imwrite(example, img)
+        # example = os.path.join(settings.IMAGE_EXAMPLE_DIR, "example.png")
+        cv2.imwrite("example.png", img)
 
         ready_to_detect_identity = False
         pool = Pool(processes=1) 
         # We run this as a separate process so that the camera feedback does not freeze
-        pool.apply_async(welcome_users, [identities])
+        handler = pool.apply_async(welcome_users, [identities])
+        handler.get()
     return img
 
 def find_identity(frame, x1, y1, x2, y2):
@@ -217,6 +221,7 @@ def welcome_users(identities):
 
 if __name__ == "__main__":
     database = prepare_database()
+    say_statement("starting facial recognition software")
     webcam_face_recognizer(database)
 
 # ### References:
