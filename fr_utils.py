@@ -190,11 +190,26 @@ def load_dataset():
     return train_set_x_orig, train_set_y_orig, test_set_x_orig, test_set_y_orig, classes
 
 def img_path_to_encoding(image_path, model):
+    """
+    converts an image specified at path to it's embedding as predicted by the model
+
+    Arguments:
+    image: image 
+    model: keras or tensorflow model to be used to get embeddings
+    """
+
     img1 = cv2.imread(image_path, 1)
     return img_to_encoding(img1, model)
     
 
 def img_to_encoding(image, model):
+    """
+    converts a cv2 image to it's embedding as predicted by the model
+
+    Arguments:
+    image: image 
+    model: keras or tensorflow model to be used to get embeddings
+    """
     image = cv2.resize(image, (96, 96)) 
     img = image[...,::-1]
     img = np.around(np.transpose(img, (2,0,1))/255.0, decimals=12)

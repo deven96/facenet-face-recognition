@@ -186,7 +186,11 @@ def who_is_it(image, database, model):
         return str(identity)
 
 def welcome_users(identities):
-    """ Outputs a welcome audio message to the users """
+    """ Outputs a welcome audio message to the users 
+    
+    Arguments:
+    identities: list of name strings to welcome
+    """
     global ready_to_detect_identity
     welcome_message = 'Welcome '
 
