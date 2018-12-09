@@ -10,13 +10,26 @@ from numpy import genfromtxt
 import tensorflow as tf
 from fr_utils import *
 from inception_blocks_v2 import *
-import win32com.client as wincl
+import pyttsx3
+
 
 PADDING = 50
 ready_to_detect_identity = True
-windows10_voice_interface = wincl.Dispatch("SAPI.SpVoice")
 
 FRmodel = faceRecoModel(input_shape=(3, 96, 96))
+
+
+def say_statement(text):
+    """pronouces text passed as argument using pyttsx3 engine
+    
+    Arguments:
+    text -- python string to be pronounced by TTS module
+    """
+    engine = pyttsx3.init()
+    engine.setProperty('voice', 'english')  # changes the voice
+    engine.say(text)
+    engine.runAndWait()
+
 
 def triplet_loss(y_true, y_pred, alpha = 0.3):
     """
@@ -138,7 +151,7 @@ def find_identity(frame, x1, y1, x2, y2):
 
 def who_is_it(image, database, model):
     """
-    Implements face recognition for the happy house by finding who is the person on the image_path image.
+    Implements face recognition by finding who is the person on the image_path image.
     
     Arguments:
     image_path -- path to an image
@@ -185,7 +198,7 @@ def welcome_users(identities):
         welcome_message += 'and %s, ' % identities[-1]
         welcome_message += 'have a nice day!'
 
-    windows10_voice_interface.Speak(welcome_message)
+    say_statement(welcome_message)
 
     # Allow the program to start detecting identities again
     ready_to_detect_identity = True
