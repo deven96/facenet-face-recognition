@@ -19,6 +19,9 @@ import pyttsx3
 PADDING = settings.PADDING
 ready_to_detect_identity = True
 
+#global opencv face cascade classifier
+face_cascade = cv2.CascadeClassifier(settings.CV2_XML)
+
 speech_engine = pyttsx3.init()
 speech_engine.setProperty('voice', 'english')  # changes the voice
 
@@ -42,14 +45,33 @@ def prepare_database():
     """
     prepares the image database by getting encoding and name of every image
     in the database and parsing it as a dictionary. This is to be replaced 
-    with proper database functionality (pre-saved encodings)
+    with proper database functionality (pre-saved encodings).
+
+    The images are cropped down to their resolute faces and saved 
     """
+    global face_cascade
+
     database = {}
 
     # load all the images of individuals to recognize into the database
     for _file in glob.glob(settings.GLOB_IMAGE_DATABASE):
         identity = os.path.splitext(os.path.basename(_file))[0]
-        database[identity] = img_path_to_encoding(_file, FRmodel)
+        image = cv2.imread(_file)
+        gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+        faces = face_cascade.detectMultiScale(gray, 1.3, 5)
+
+        try:
+            for (x, y, w, h) in faces:
+                x1 = x
+                y1 = y
+                x2 = x+w
+                y2 = y+h
+            #crop out just the faces so the network just takes into account only faces
+            cropped_path = str(os.path.join(settings.CROPPED_IMAGES, identity)) + '.jpg'
+            cv2.imwrite(cropped_path, image[y1):y2, x1:x2])
+            database[identity] = img_path_to_encoding(cropped_path, FRmodel)
+        except:
+            sys.exit(f"No face detected for {_file} image in database")
 
     return database
 
@@ -61,12 +83,10 @@ def webcam_face_recognizer(database):
     If it contains a face, an audio message will be played welcoming the user.
     If not, the program will process the next frame from the webcam
     """
-    global ready_to_detect_identity
+    global ready_to_detect_identity, face_cascade
 
     cv2.namedWindow(settings.WINDOW_NAME)
     vc = cv2.VideoCapture(0)
-
-    face_cascade = cv2.CascadeClassifier(settings.CV2_XML)
     
     while vc.isOpened():
         _, frame = vc.read()
@@ -120,6 +140,7 @@ def process_frame(img, frame, face_cascade):
 def find_identity(frame, x1, y1, x2, y2):
     """
     Determine whether the face contained within the bounding box exists in our database
+    It creates a crop of just the face detected in the image
 
     x1,y1_____________
        |              |
@@ -193,8 +214,9 @@ def welcome_users(identities):
 
 if __name__ == "__main__":
     database = prepare_database()
-    say_statement("starting facial recognition software")
-    webcam_face_recognizer(database)
+    # say_statement("starting facial recognition software")
+    # webcam_face_recognizer(database)
+
 
 # ### References:
 # 

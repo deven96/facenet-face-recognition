@@ -6,3 +6,4 @@ opencv-python
 h5py
 matplotlib
 pyttsx3
+dlib
