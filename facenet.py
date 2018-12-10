@@ -68,7 +68,7 @@ def prepare_database():
                 y2 = y+h
             #crop out just the faces so the network just takes into account only faces
             cropped_path = str(os.path.join(settings.CROPPED_IMAGES, identity)) + '.jpg'
-            cv2.imwrite(cropped_path, image[y1):y2, x1:x2])
+            cv2.imwrite(cropped_path, image[y1:y2, x1:x2])
             database[identity] = img_path_to_encoding(cropped_path, FRmodel)
         except:
             sys.exit(f"No face detected for {_file} image in database")
@@ -214,8 +214,8 @@ def welcome_users(identities):
 
 if __name__ == "__main__":
     database = prepare_database()
-    # say_statement("starting facial recognition software")
-    # webcam_face_recognizer(database)
+    say_statement("starting facial recognition software")
+    webcam_face_recognizer(database)
 
 
 # ### References:

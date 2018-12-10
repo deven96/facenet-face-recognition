@@ -15,7 +15,7 @@ WINDOW_NAME = "FaceRec - preview"
 #ai model settings
 _FLOATX = 'float32'
 IMAGE_SIZE = (96, 96)
-GLOB_IMAGE_DATABASE = "images/*"
+GLOB_IMAGE_DATABASE = "images/*.*"
 IMAGE_EXAMPLE_DIR = os.path.join(CURRENT_DIR, "images", "examples")
 CROPPED_IMAGES = os.path.join(CURRENT_DIR, "images", "cropped")
 
