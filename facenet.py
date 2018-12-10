@@ -107,8 +107,8 @@ def process_frame(img, frame, face_cascade):
             identities.append(identity)
 
     if identities != []:
-        # example = os.path.join(settings.IMAGE_EXAMPLE_DIR, "example.png")
-        cv2.imwrite("example.png", img)
+        example = os.path.join(settings.IMAGE_EXAMPLE_DIR, "example.png")
+        cv2.imwrite(example, img)
 
         ready_to_detect_identity = False
         pool = Pool(processes=1) 
