@@ -4,13 +4,20 @@ This repository contains a demonstration of face recognition using the FaceNet n
 
 ## How to use
 
-To install all the requirements for the project run
+- To install all the requirements for the project run
 
+```bash
 	pip install -r requirements.txt
+```
 
-In the root directory. After the modules have been installed you can run the project by using python
+- Upload a good photograph of yourself with a valid filename e.g "adam.jpg" into the `images/` directory
 
+
+- In the root directory. After the modules have been installed you can run the project by using python
+
+```bash
 	python facenet.py
+```
 
 ## NOTE
 
